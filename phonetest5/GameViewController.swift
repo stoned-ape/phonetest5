@@ -39,56 +39,27 @@ class GameViewController: UIViewController {
         let scene = SCNScene()
         
         
-        var ax:Double=0
-        var ay:Double=0
-        var az:Double=0
-        while(ax==0.0 && ay==0.0 && az==0){
-            let dm=cm.deviceMotion
-
-            ax=dm?.gravity.x ?? 0
-            ay=dm?.gravity.y ?? 0
-            az=dm?.gravity.z ?? 0
-        }
-        let vy = -vec3(ax,ay,az).normalize()
-        let vx = -vy.cross(vy.rotate(angleAxis(PI/2,vec3(0.0,1.0,0.0)))).normalize()
-        let vz = vy.cross(vx).normalize()
-        print(vx)
-        print(vy)
-        print(vz)
-        scene.rootNode.simdTransform=simd_float4x4(
-            SIMD4<Float>(vx.x,vx.y,vx.z,0),
-            SIMD4<Float>(vy.x,vy.y,vy.z,0),
-            SIMD4<Float>(vz.x,vz.y,vz.z,0),
-            SIMD4<Float>(0   ,0   ,0   ,1))
-                                //acc.cross(acc.rotate(angleAxis(PI/2,vec3(1.0,0.0,0.0)))).toSCNV())
-        
-        
-        
-        
-        
-//        let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
         scene.rootNode.addChildNode(cameraNode)
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
         
-        thetaEye=atan2(Float(eyedist),4.0)
+//        thetaEye=atan2(Float(eyedist),4.0)
         
-        cameraNode.localRotate(by:angleAxis(thetaEye,vec3(1.0,0.0,0.0)).toSCNQ())
+//        cameraNode.localRotate(by:angleAxis(thetaEye,vec3(1.0,0.0,0.0)).toSCNQ())
         
-        blocker.geometry=SCNBox(width:4,height:4,length:1,chamferRadius:0)
-        blocker.position=SCNVector3(x: 0, y: -2, z: -5.5)
-        cameraNode.addChildNode(blocker)
+//        blocker.geometry=SCNBox(width:4,height:4,length:1,chamferRadius:0)
+//        blocker.position=SCNVector3(x: 0, y: -2, z: -5.5)
+//        cameraNode.addChildNode(blocker)
         
         
         
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
         lightNode.light!.type = .omni
-//        lightNode.light!.color = UIColor(red:177/255, green:86/255, blue:15/255, alpha:1)
         lightNode.position = SCNVector3(x: -10, y: 10, z: 10)
         lightNode.look(at: SCNVector3(0,0,0))
         lightNode.light?.castsShadow=true
-//        scene.rootNode.addChildNode(lightNode)
+        scene.rootNode.addChildNode(lightNode)
 //        box.addChildNode(lightNode)
         
         
@@ -98,68 +69,63 @@ class GameViewController: UIViewController {
         ambientLightNode.light!.color = UIColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
         
-//        var mat=SCNMaterial()
-//        mat.metalness=1
-//        let r1=SCNNode()
-//        r1.geometry=SCNTorus(ringRadius:5,pipeRadius:0.2) //SCNBox(width:4,height:4,length:4,chamferRadius:0)
+
+        r1.geometry=SCNTorus(ringRadius:5,pipeRadius:0.2)
         r1.position = SCNVector3(x: 0, y: 0, z: 0)
         r1.localRotate(by:angleAxis(PI/2,vec3(1.0,0.0,0.0)).toSCNQ())
         scene.rootNode.addChildNode(r1)
         
         
 
-//        r2.geometry=SCNTorus(ringRadius:4,pipeRadius:0.2)
-//        print(r2.geometry?.firstMaterial)
-//        r2.geometry?.firstMaterial?.reflective.contents=0.
-//        r2.geometry
+        r2.geometry=SCNTorus(ringRadius:4,pipeRadius:0.2)
         r2.position = SCNVector3(x: 0, y: 0, z: 0)
         r2.localRotate(by:angleAxis(PI/2,vec3(1.0,0.0,0.0)).toSCNQ())
         r1.addChildNode(r2)
         
 
-//        r3.geometry=SCNTorus(ringRadius:3,pipeRadius:0.2) //SCNBox(width:4,height:4,length:4,chamferRadius:0)
+        r3.geometry=SCNTorus(ringRadius:3,pipeRadius:0.2)
         r3.position = SCNVector3(x: 0, y: 0, z: 0)
         r3.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
         r2.addChildNode(r3)
         
 
-//        box.geometry=SCNBox(width:3,height:3,length:3,chamferRadius:0)
+        box.geometry=SCNBox(width:3,height:3,length:3,chamferRadius:0)
         box.position=SCNVector3(x: 0, y: 0, z: 0)
         r3.addChildNode(box)
         
-        box.addChildNode(generate())
-        box.addChildNode(lightNode)
+//        box.addChildNode(generate())
+//        box.addChildNode(lightNode)
         
-//        let s3=SCNNode()
-//        s3.geometry=SCNCylinder(radius:0.2,height:6)
-//        s3.position=SCNVector3(x: 0, y: 0, z: 0)
-//        s3.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
-//        r3.addChildNode(s3)
-//
-//        let s2a=SCNNode()
-//        s2a.geometry=SCNCylinder(radius:0.2,height:1)
-//        s2a.position=SCNVector3(x:0,y:0,z:3.5)
-//        s2a.localRotate(by:angleAxis(PI/2,vec3(1.0,0.0,0.0)).toSCNQ())
-//        r2.addChildNode(s2a)
-//
-//        let s2b=SCNNode()
-//        s2b.geometry=SCNCylinder(radius:0.2,height:1)
-//        s2b.position=SCNVector3(x:0,y:0,z:-3.5)
-//        s2b.localRotate(by:angleAxis(PI/2,vec3(1.0,0.0,0.0)).toSCNQ())
-//        r2.addChildNode(s2b)
-//
-//        let s1a=SCNNode()
-//        s1a.geometry=SCNCylinder(radius:0.2,height:1)
-//        s1a.position=SCNVector3(x:4.5,y:0,z:0)
-//        s1a.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
-//        r1.addChildNode(s1a)
-//
-//        let s1b=SCNNode()
-//        s1b.geometry=SCNCylinder(radius:0.2,height:1)
-//        s1b.position=SCNVector3(x:-4.5,y:0,z:0)
-//        s1b.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
-//        r1.addChildNode(s1b)
-//
+        let s3=SCNNode()
+        s3.geometry=SCNCylinder(radius:0.2,height:6)
+        s3.position=SCNVector3(x: 0, y: 0, z: 0)
+        s3.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
+        r3.addChildNode(s3)
+
+        let s2a=SCNNode()
+        s2a.geometry=SCNCylinder(radius:0.2,height:1)
+        s2a.position=SCNVector3(x:0,y:0,z:3.5)
+        s2a.localRotate(by:angleAxis(PI/2,vec3(1.0,0.0,0.0)).toSCNQ())
+        r2.addChildNode(s2a)
+
+        let s2b=SCNNode()
+        s2b.geometry=SCNCylinder(radius:0.2,height:1)
+        s2b.position=SCNVector3(x:0,y:0,z:-3.5)
+        s2b.localRotate(by:angleAxis(PI/2,vec3(1.0,0.0,0.0)).toSCNQ())
+        r2.addChildNode(s2b)
+
+        let s1a=SCNNode()
+        s1a.geometry=SCNCylinder(radius:0.2,height:1)
+        s1a.position=SCNVector3(x:4.5,y:0,z:0)
+        s1a.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
+        r1.addChildNode(s1a)
+
+        let s1b=SCNNode()
+        s1b.geometry=SCNCylinder(radius:0.2,height:1)
+        s1b.position=SCNVector3(x:-4.5,y:0,z:0)
+        s1b.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
+        r1.addChildNode(s1b)
+
         
         let scnView = self.view as! SCNView
         scnView.delegate=self
@@ -179,20 +145,6 @@ class GameViewController: UIViewController {
         var w:Float=1.0,gridSize=40
         root.localRotate(by:angleAxis(PI/2,vec3(0.0,0.0,1.0)).toSCNQ())
         root.position=SCNVector3(x: 0, y: 0, z: 0)
-//        var ax:Double=0
-//        var ay:Double=0
-//        var az:Double=0
-//        while(ax==0.0 && ay==0.0 && az==0){
-//            let dm=cm.deviceMotion
-//
-//            ax=dm?.gravity.x ?? 0
-//            ay=dm?.gravity.y ?? 0
-//            az=dm?.gravity.z ?? 0
-//        }
-//
-//        let acc=vec3(ax,ay,az)
-//        print(acc)
-//        root.look(at: SCNVector3(ax,ay,az))
         let nm=GKNoiseMap(GKNoise(GKPerlinNoiseSource()))
         for i in 0..<gridSize{
             for j in 0..<gridSize{
@@ -224,18 +176,17 @@ class GameViewController: UIViewController {
 
 extension GameViewController:SCNSceneRendererDelegate{
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        if(left){
-            cameraNode.position = SCNVector3(x: 0, y: Float(eyedist/2), z: 15)
-            cameraNode.localRotate(by:angleAxis(-2.0*thetaEye,vec3(1.0,0.0,0.0)).toSCNQ())
-            blocker.position=SCNVector3(x: 0, y: -2, z: -5.5)
-        }else{
-            cameraNode.position = SCNVector3(x: 0, y: -Float(eyedist/2), z: 15)
-            cameraNode.localRotate(by:angleAxis(
-                                2.0*thetaEye,vec3(1.0,0.0,0.0)).toSCNQ())
-//            cameraNode.look(at: SCNVector3(0,0,0))
-            blocker.position=SCNVector3(x: 0, y: 2, z: -5.5)
-        }
-        left = !left
+//        if(left){
+//            cameraNode.position = SCNVector3(x: 0, y: Float(eyedist/2), z: 15)
+//            cameraNode.localRotate(by:angleAxis(-2.0*thetaEye,vec3(1.0,0.0,0.0)).toSCNQ())
+//            blocker.position=SCNVector3(x: 0, y: -2, z: -5.5)
+//        }else{
+//            cameraNode.position = SCNVector3(x: 0, y: -Float(eyedist/2), z: 15)
+//            cameraNode.localRotate(by:angleAxis(
+//                                2.0*thetaEye,vec3(1.0,0.0,0.0)).toSCNQ())
+//            blocker.position=SCNVector3(x: 0, y: 2, z: -5.5)
+//        }
+//        left = !left
         
         
         let dm=cm.deviceMotion
@@ -273,19 +224,5 @@ extension GameViewController:SCNSceneRendererDelegate{
         
         theta2=theta2+dtheta2dt*dt
         theta=theta+dthetadt*dt
-        
-        
-//        CANode.look(at:acc.toSCNV())
-//        
-//        let upa=vec3(CANode.worldUp)
-//        let upm=vec3(CMNode.worldUp)
-//        let qa=fromTo(upa,-acc)
-//        let qm=fromTo(upm,m)
-//        if (qa.s == qa.s){
-//            CANode.localRotate(by:qa.toSCNQ())
-//        }
-//        if (qm.s == qm.s){
-//            CMNode.localRotate(by:qm.toSCNQ())
-//        }
     }
 }
