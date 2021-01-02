@@ -11,10 +11,9 @@ import SceneKit
 import CoreMotion
 import GameplayKit
 
-var PI=Float.pi//=3.14159265
-
+var PI=Float.pi
 var cm=CMMotionManager()
-//var dm=CMDeviceMotion()
+
 class GameViewController: UIViewController {
     var boxNode=SCNNode()
     var CANode=SCNNode()
